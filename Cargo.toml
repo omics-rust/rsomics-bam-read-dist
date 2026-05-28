@@ -12,6 +12,11 @@ description = "Classify mapped reads into genomic regions (CDS/UTR/intron/TSS/TE
 name = "rsomics-bam-read-dist"
 path = "src/main.rs"
 
+
+[lib]
+name = "rsomics_bam_read_dist"
+path = "src/lib.rs"
+doctest = false
 [dependencies]
 rsomics-common = { version = "0.6" }
 rsomics-bamio = { version = "0.1" }
