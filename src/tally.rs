@@ -41,10 +41,7 @@ impl ReadDistResult {
         self.total_tags - self.unassigned_tags
     }
 
-    /// Emit the exact text format `RSeQC` `read_distribution.py` prints to stdout.
-    ///
-    /// `"%-30s%d"` header lines; `"%-20s%-20d%-20d%-18.2f"` table rows; `+1` denominator
-    /// matches RSeQC source exactly.
+    /// `+1` denominator in Tags/Kb matches RSeQC source exactly.
     pub fn write_rseqc<W: Write>(&self, mut out: W) -> std::io::Result<()> {
         writeln!(out, "{:<30}{}", "Total Reads", self.total_reads)?;
         writeln!(out, "{:<30}{}", "Total Tags", self.total_tags)?;
@@ -115,10 +112,7 @@ impl ReadDistResult {
     }
 }
 
-/// Classify one tag (exon-block midpoint) and increment the appropriate counter.
-///
-/// Priority: CDS → 5'UTR (exclusive) → 3'UTR (exclusive) → both UTR → intron →
-/// both TSS+TES 10kb → TSS_up/TES_down 1/5/10kb → unassigned. Matches RSeQC source.
+// Priority: CDS → 5'UTR → 3'UTR → intron → TSS/TES windows → unassigned (RSeQC order).
 pub(crate) fn classify_tag(mid: i32, chrom: &str, idx: &FeatureIndex, res: &mut ReadDistResult) {
     if idx.cds.contains(chrom, mid) {
         res.cds_exons_tags += 1;
